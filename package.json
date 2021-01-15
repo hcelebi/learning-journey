@@ -1,0 +1,8 @@
+{
+  "name": "learning-journey",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@git.app.gittigidiyor.net:aozfidan/learning-journey.git",
+  "author": "Phnx",
+  "license": "MIT"
+}
