@@ -4,5 +4,8 @@
   "main": "index.js",
   "repository": "git@git.app.gittigidiyor.net:aozfidan/learning-journey.git",
   "author": "Phnx",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
