@@ -5,6 +5,8 @@ Map gitVars
 def (GROUP, REPOSITORY) = JOB_NAME.toLowerCase().split("/")
 
 def DOCKER_IMAGE_NAME = GROUP + "-" + REPOSITORY
+def DOCKER_IMAGE_NAME = pipelineParams.get('imageName', GROUP + "-" + REPOSITORY)
+
 String SHORT_BRANCH_NAME
 String DOCKER_IMAGE_VERSION
 
@@ -59,7 +61,7 @@ pipeline {
                                         extensions                       : [
                                                 [$class: 'AuthorInChangelog'],
                                                 [$class: 'CleanBeforeCheckout'],
-                                                [$class: 'UserIdentity', email: 'dl-gg-test-automation-run@ebay.com', name: 'dota'],
+                                                [$class: 'UserIdentity', email: 'dl-gg-phnx@ebay.com', name: 'jenkins'],
                                                 [$class: 'PreBuildMerge', options: [mergeRemote: 'origin', mergeTarget: 'master']]
                                         ],
                                         submoduleCfg                     : [],
@@ -76,18 +78,10 @@ pipeline {
                     log.info "SHORT_BRANCH_NAME: $SHORT_BRANCH_NAME"
 
                     DOCKER_IMAGE_VERSION = generateVersion("pom.xml", "${env.BUILD_NUMBER}", SHORT_BRANCH_NAME)
-                    MAVEN_VERSION = generateVersionForNexus("pom.xml", "${env.BUILD_NUMBER}", SHORT_BRANCH_NAME)
-
-                    MAVEN_COMMAND = "mvn --batch-mode clean org.codehaus.mojo:versions-maven-plugin:2.1:set -DnewVersion=$MAVEN_VERSION verify -Dsurefire.useSystemClassLoader=false -Dfailsafe.useSystemClassLoader=false -Dpact.verifier.publishResults=true -Dpact.provider.version=${MAVEN_VERSION}"
-
-                    if (SHORT_BRANCH_NAME == 'master') {
-                        MAVEN_COMMAND = "$MAVEN_COMMAND"
-                    } else {
-                        MAVEN_COMMAND = "$MAVEN_COMMAND -Denforcer.skip=true"
-                    }
 
                     DOCKER_GID = sh(script: "stat -c '%g' /var/run/docker.sock", returnStdout: true).trim()
-                    sh "docker pull $mavenImage"
+                   
+                    sh "docker build --pull -t $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_VERSION ."
                     sh "docker run ${getDockerParams()} $mavenImage sh -c '${MAVEN_COMMAND}'"
                 }
             }
