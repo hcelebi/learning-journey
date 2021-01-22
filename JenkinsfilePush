@@ -83,14 +83,14 @@ pipeline {
                 stage("Docker Push (Office)") {
                     steps {
                         script {
-                            pushToRegistry("${env.REGISTRY_TEST}", "$DOCKER_IMAGE_NAME", "$DOCKER_IMAGE_VERSION")
+                            pushToRegistry("${env.REGISTRY_TEST}", "$DOCKER_IMAGE_NAME", "${env.BUILD_NUMBER}")
                         }
                     }
                 }
             }
             post {
                 always {
-                    sh "docker rmi $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_VERSION"
+                    sh "docker rmi $DOCKER_IMAGE_NAME:${env.BUILD_NUMBER}"
                 }
             }
         }
