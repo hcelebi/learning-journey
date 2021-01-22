@@ -4,8 +4,7 @@ def scmUrl = scm.getUserRemoteConfigs()[0].getUrl()
 Map gitVars
 def (GROUP, REPOSITORY) = JOB_NAME.toLowerCase().split("/")
 
-def DOCKER_IMAGE_NAME = GROUP + "-" + REPOSITORY
-def DOCKER_IMAGE_NAME = pipelineParams.get('imageName', GROUP + "-" + REPOSITORY)
+def DOCKER_IMAGE_NAME = "learning-journey"
 
 String SHORT_BRANCH_NAME
 String DOCKER_IMAGE_VERSION
@@ -71,36 +70,10 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                script {
-                    SHORT_BRANCH_NAME = "${env.BRANCH_NAME}".replaceAll('origin/', '').replaceAll('/', '-')
-                    log.info "SHORT_BRANCH_NAME: $SHORT_BRANCH_NAME"
-
-                    DOCKER_IMAGE_VERSION = generateVersion("pom.xml", "${env.BUILD_NUMBER}", SHORT_BRANCH_NAME)
-
-                    DOCKER_GID = sh(script: "stat -c '%g' /var/run/docker.sock", returnStdout: true).trim()
-                   
-                    sh "docker build --pull -t $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_VERSION ."
-                    sh "docker run ${getDockerParams()} $mavenImage sh -c '${MAVEN_COMMAND}'"
-                }
-            }
-            post {
-                always {
-                    script {
-                        junit testResults: 'target/**/TEST-*.xml', allowEmptyResults: true
-
-                        def maven = scanForIssues tool: mavenConsole()
-                        publishIssues issues: [maven]
-                    }
-                }
-            }
-        }
-
         stage("Docker Build") {
             steps {
                 script {
-                    sh "docker build --pull -t $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_VERSION ."
+                    sh "docker build --pull -t $DOCKER_IMAGE_NAME:${env.BUILD_NUMBER} ."
                 }
             }
         }
@@ -112,13 +85,6 @@ pipeline {
                         script {
                             pushToRegistry("${env.REGISTRY_TEST}", "$DOCKER_IMAGE_NAME", "$DOCKER_IMAGE_VERSION")
                         }
-                    }
-                }
-
-                stage("Docker Push (Harbor)") {
-                    when { expression { return SHORT_BRANCH_NAME == 'master' } }
-                    steps {
-                        pushToRegistry("${env.REGISTRY_PROD}", "$DOCKER_IMAGE_NAME", "$DOCKER_IMAGE_VERSION")
                     }
                 }
             }
@@ -152,17 +118,3 @@ pipeline {
         }
     }
 }
-
-private String getDockerParams() {
-    dockerParameters = [
-            "--rm",
-            "--group-add", "${DOCKER_GID}",
-            "-v", "/home/jenkins/.m2/repository/:/home/jenkins/.m2/repository/",
-            "-v", "$workspace:$workspace",
-            "-w", "$workspace",
-            "-v", "/var/run/docker.sock:/var/run/docker.sock"
-    ]
-
-    return "${dockerParameters.join(' ')}"
-}
-
