@@ -104,17 +104,4 @@ pipeline {
             }
         }
     }
-
-    post {
-        always {
-            sh "docker run --rm -v $workspace:/home/jenkins/ws/ $mavenImage sh -c 'sudo chown -R 1000:1000 /home/jenkins/ws/'"
-            deleteDir()
-        }
-        success {
-            echo 'Pipeline completed successfully'
-        }
-        failure {
-            echo 'Pipeline failed'
-        }
-    }
 }
