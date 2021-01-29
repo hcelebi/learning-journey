@@ -28,11 +28,5 @@ spec:
           limits:
             memory: 1152Mi
             cpu: '1'
-        volumeMounts:
-        - mountPath: /var/log/java
-          name: learning-journey-claim0
       restartPolicy: Always
       terminationGracePeriodSeconds: 10
-      volumes:
-      - name: learning-journey-claim0
-        emptyDir: {}
