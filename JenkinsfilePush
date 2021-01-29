@@ -94,14 +94,5 @@ pipeline {
                 }
             }
         }
-
-        stage("Git Tag") {
-            when { expression { return SHORT_BRANCH_NAME == 'master' } }
-            steps {
-                script {
-                    sh "docker run --rm --env TAG=$DOCKER_IMAGE_VERSION -v $workspace:/usr/src harbor-test.app.gittigidiyor.net/gg/git-client:5"
-                }
-            }
-        }
     }
 }
