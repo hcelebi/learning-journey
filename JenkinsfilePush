@@ -76,7 +76,7 @@ pipeline {
                     sh "pwd"
                     sh "ls -la $WORKSPACE"
                     sh "ls -la /home/jenkins"
-                    sh "ls -la /home/jenkins/.kube/config"
+                    sh "ls -la /home/jenkins/.kube"
                 }
             }
         }
