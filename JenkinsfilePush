@@ -70,17 +70,6 @@ pipeline {
             }
         }
 
-        stage("sh ls") {
-            steps {
-                script {
-                    sh "pwd"
-                    sh "ls -la $WORKSPACE"
-                    sh "ls -la /home/jenkins"
-                    sh "ls -la /home/jenkins/.kube"
-                }
-            }
-        }
-
         stage("Docker Build") {
             steps {
                 script {
@@ -108,7 +97,7 @@ pipeline {
         stage("Deploy To Test Cluster") {
             steps {
                 script {
-                    sh "docker run -v '$WORKSPACE/kube:/opt/kube' -v '$WORKSPACE/kube/config:/.kube/config'  bitnami/kubectl:1.20.2  apply -f /opt/kube/deployment.yaml -f /opt/kube/service.yaml -n phnx"
+                    sh "docker run -v '$WORKSPACE/kube:/opt/kube' -v '$WORKSPACE/kube:/.kube'  bitnami/kubectl:1.20.2  apply -f /opt/kube/deployment.yaml -f /opt/kube/service.yaml -n phnx"
                 }
             }
         }
