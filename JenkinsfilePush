@@ -93,7 +93,7 @@ pipeline {
         stage("Deploy To Test Cluster With Agent") {
             agent {
                 kubernetes {
-                    cloud 'kubernetes-preprod'
+                    cloud 'kubernetes-dev'
                     label 'learning-journey-dev-deploy'
                     defaultContainer 'kubectl'
                     yaml """
