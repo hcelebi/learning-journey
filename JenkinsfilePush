@@ -107,7 +107,7 @@ pipeline {
         stage("Deploy To Test Cluster With Agent") {
             agent {
                 kubernetes {
-                    cloud 'kubernetes-dev'
+                    cloud 'kubernetes-preprod'
                     label 'learning-journey-dev-deploy'
                     defaultContainer 'kubectl'
                     yaml """
@@ -115,23 +115,23 @@ pipeline {
                     kind: Pod
                     metadata:
                         labels:
-                            goal: deploy
+                        goal: deploy
                     spec:
                         securityContext:
-                            runAsUser: 0
+                        runAsUser: 0
                         containers:
-                            - name: kubectl
-                                image: lachlanevenson/k8s-kubectl
-                                resources:
-                                    requests:
-                                        memory: 100Mi
-                                        cpu : 250m
-                                    limits:
-                                        memory: 300Mi
-                                        cpu : 250m
-                                command:
-                                    - cat
-                                tty: true
+                        - name: kubectl
+                            image: lachlanevenson/k8s-kubectl
+                            resources:
+                            requests:
+                                memory: 100Mi
+                                cpu : 250m
+                            limits:
+                                memory: 300Mi
+                                cpu : 250m
+                            command:
+                            - cat
+                            tty: true
                     """
                 }
             }
