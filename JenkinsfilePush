@@ -47,14 +47,7 @@ pipeline {
     }
 
     stages {
-        stage("sh") {
-            steps {
-                script {
-                    sh "pwd"
-                    sh "ls -la $WORKSPACE"
-                }
-            }
-        }
+    
 
         stage("Docker Build") {
             steps {
@@ -123,8 +116,6 @@ pipeline {
             }
             steps {
                 script {
-                    sh "ls -la $WORKSPACE"
-                    sh "pwd"
                     sh "kubectl  apply -f $WORKSPACE/kube/deployment.yaml -f $WORKSPACE/kube/service.yaml -n phnx"
                 }
             }
