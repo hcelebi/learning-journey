@@ -97,7 +97,7 @@ pipeline {
         stage("Deploy To Test Cluster") {
             steps {
                 script {
-                    sh "docker run -v '$WORKSPACE/kube:/opt/kube' -v '$WORKSPACE/kube:/.kube'  bitnami/kubectl:1.20.2  apply -f /opt/kube/deployment.yaml -f /opt/kube/service.yaml -n phnx"
+                    sh "docker run -v '$WORKSPACE/kube:/opt/kube'  bitnami/kubectl:1.20.2  apply -f /opt/kube/deployment.yaml -f /opt/kube/service.yaml -n phnx --kubeconfig /opt/kube/config"
                 }
             }
         }
