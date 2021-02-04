@@ -114,24 +114,24 @@ pipeline {
                     apiVersion: v1
                     kind: Pod
                     metadata:
-                        labels:
+                      labels:
                         goal: deploy
                     spec:
-                        securityContext:
+                      securityContext:
                         runAsUser: 0
-                        containers:
+                      containers:
                         - name: kubectl
-                            image: lachlanevenson/k8s-kubectl
-                            resources:
+                          image: lachlanevenson/k8s-kubectl
+                          resources:
                             requests:
-                                memory: 100Mi
-                                cpu : 250m
+                              memory: 100Mi
+                              cpu : 250m
                             limits:
-                                memory: 300Mi
-                                cpu : 250m
-                            command:
+                              memory: 300Mi
+                              cpu : 250m
+                          command:
                             - cat
-                            tty: true
+                          tty: true
                     """
                 }
             }
