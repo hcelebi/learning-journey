@@ -146,7 +146,9 @@ pipeline {
             }
             steps {
                 script {
-                    sh "kubectl  apply -f ${WORKSPACE}/kube/deployment.yaml -f ${WORKSPACE}/kube/service.yaml -n phnx"
+                    sh "ls -la $WORKSPACE"
+                    sh "pwd"
+                    sh "kubectl  apply -f $WORKSPACE/kube/deployment.yaml -f $WORKSPACE/kube/service.yaml -n phnx"
                 }
             }
         }
