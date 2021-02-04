@@ -70,6 +70,15 @@ pipeline {
             }
         }
 
+        stage("sh") {
+            steps {
+                script {
+                    sh "pwd"
+                    sh "ls -la $WORKSPACE"
+                }
+            }
+        }
+
         stage("Docker Build") {
             steps {
                 script {
