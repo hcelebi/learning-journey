@@ -20,7 +20,6 @@ pipeline {
         timestamps()
         gitLabConnection('gitlab-connection')
         disableConcurrentBuilds()
-        skipDefaultCheckout()
     }
 
     environment {
@@ -48,28 +47,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                script {
-                    sh "printenv"
-                    echo 'Checkout stage started'
-                    deleteDir()
-                    gitVars = checkout([$class                           : 'GitSCM',
-                                        branches                         : scm.branches,
-                                        doGenerateSubmoduleConfigurations: false,
-                                        extensions                       : [
-                                                [$class: 'AuthorInChangelog'],
-                                                [$class: 'CleanBeforeCheckout'],
-                                                [$class: 'UserIdentity', email: 'dl-gg-phnx@ebay.com', name: 'jenkins'],
-                                                [$class: 'PreBuildMerge', options: [mergeRemote: 'origin', mergeTarget: 'master']]
-                                        ],
-                                        submoduleCfg                     : [],
-                                        userRemoteConfigs                : [[credentialsId: '54a495be-9f2a-4178-be2e-5f06753bb118', url: "$scmUrl"]]])
-                    echo 'Checkout stage completed'
-                }
-            }
-        }
-
         stage("sh") {
             steps {
                 script {
