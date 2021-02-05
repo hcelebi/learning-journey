@@ -82,6 +82,44 @@ pipeline {
             }
         }
 
+        stage("Deploy To Test Cluster With Agent") {
+            agent {
+                kubernetes {
+                    cloud 'kubernetes-dev'
+                    label 'learning-journey-dev-deploy'
+                    defaultContainer 'kubectl'
+                    yaml """
+                    apiVersion: v1
+                    kind: Pod
+                    metadata:
+                      labels:
+                        goal: deploy
+                    spec:
+                      securityContext:
+                        runAsUser: 0
+                      containers:
+                        - name: kubectl
+                          image: lachlanevenson/k8s-kubectl
+                          resources:
+                            requests:
+                              memory: 100Mi
+                              cpu : 250m
+                            limits:
+                              memory: 300Mi
+                              cpu : 250m
+                          command:
+                            - cat
+                          tty: true
+                    """
+                }
+            }
+            steps {
+                script {
+                    sh "kubectl  apply -f $WORKSPACE/kube/deployment.yaml -f $WORKSPACE/kube/service.yaml -n phnx"
+                }
+            }
+        }
+
 
         /*
         stage("Deploy To Test Cluster") {
