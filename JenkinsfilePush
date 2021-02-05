@@ -74,6 +74,15 @@ pipeline {
             }
         }
 
+        stage ("Deploy To Test Cluster"){
+            steps {
+                script {
+                    sh "kubectl -n phnx apply -f ./kube"
+                }
+            }
+        }
+
+
         /*
         stage("Deploy To Test Cluster") {
             steps {
@@ -82,7 +91,7 @@ pipeline {
                 }
             }
         }
-*/
+
         stage("Deploy To Test Cluster With Agent") {
             agent {
                 kubernetes {
@@ -119,6 +128,6 @@ pipeline {
                     sh "kubectl  apply -f $WORKSPACE/kube/deployment.yaml -f $WORKSPACE/kube/service.yaml -n phnx"
                 }
             }
-        }
+        }*/
     }
 }
