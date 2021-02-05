@@ -77,7 +77,7 @@ pipeline {
         stage ("Deploy To Test Cluster"){
             steps {
                 script {
-                    sh "kubectl -n phnx apply -f ./kube"
+                    sh "docker run -v '$WORKSPACE/kube:/opt/kube' --name kubectl bitnami/kubectl:latest -n phnx apply -f /opt/kube --kubeconfig /opt/kube/config"
                 }
             }
         }
