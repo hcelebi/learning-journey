@@ -74,14 +74,6 @@ pipeline {
             }
         }
 
-        stage ("Deploy To Test Cluster"){
-            steps {
-                script {
-                    sh "docker run -v '$WORKSPACE/kube:/opt/kube' --name kubectl bitnami/kubectl:latest -n phnx apply -f /opt/kube --kubeconfig /opt/kube/config"
-                }
-            }
-        }
-
         stage("Deploy To Test Cluster With Agent") {
             agent {
                 kubernetes {
@@ -119,53 +111,5 @@ pipeline {
                 }
             }
         }
-
-
-        /*
-        stage("Deploy To Test Cluster") {
-            steps {
-                script {
-                    sh "docker run -v '$WORKSPACE/kube:/opt/kube'  bitnami/kubectl:1.20.2  apply -f /opt/kube/deployment.yaml -f /opt/kube/service.yaml -n phnx --kubeconfig /opt/kube/config"
-                }
-            }
-        }
-
-        stage("Deploy To Test Cluster With Agent") {
-            agent {
-                kubernetes {
-                    cloud 'kubernetes-dev'
-                    label 'learning-journey-dev-deploy'
-                    defaultContainer 'kubectl'
-                    yaml """
-                    apiVersion: v1
-                    kind: Pod
-                    metadata:
-                      labels:
-                        goal: deploy
-                    spec:
-                      securityContext:
-                        runAsUser: 0
-                      containers:
-                        - name: kubectl
-                          image: lachlanevenson/k8s-kubectl
-                          resources:
-                            requests:
-                              memory: 100Mi
-                              cpu : 250m
-                            limits:
-                              memory: 300Mi
-                              cpu : 250m
-                          command:
-                            - cat
-                          tty: true
-                    """
-                }
-            }
-            steps {
-                script {
-                    sh "kubectl  apply -f $WORKSPACE/kube/deployment.yaml -f $WORKSPACE/kube/service.yaml -n phnx"
-                }
-            }
-        }*/
     }
 }
