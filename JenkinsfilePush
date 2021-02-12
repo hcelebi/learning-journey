@@ -107,7 +107,6 @@ pipeline {
                 script {
                     sh """
                     sed "s/%%IMAGE_VERSION%%/${env.BUILD_NUMBER}/g" $WORKSPACE/kube/deployment.yaml > $WORKSPACE/kube/temp-deployment.yaml
-                    cat $WORKSPACE/kube/temp-deployment.yaml
                     kubectl  apply -f $WORKSPACE/kube/temp-deployment.yaml -f $WORKSPACE/kube/service.yaml  -n phnx
                     """
                 }
