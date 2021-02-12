@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: learning-journey
-        image: harbor-test.app.gittigidiyor.net/gg/learning-journey:3
+        image: harbor-test.app.gittigidiyor.net/gg/learning-journey:%%IMAGE_VERSION%%
         ports:
         - containerPort: 3000
         resources:

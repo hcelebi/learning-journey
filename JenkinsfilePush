@@ -107,7 +107,10 @@ pipeline {
             }
             steps {
                 script {
-                    sh "kubectl  apply -f $WORKSPACE/kube/deployment.yaml -f $WORKSPACE/kube/service.yaml -n phnx"
+                    sh """
+                    sed "s/%%IMAGE_VERSION%%/${env.BUILD_NUMBER}/g" ${WORKSPACE}/kube/deployment.yaml > temp-deployment.yaml
+                    kubectl  apply -f $WORKSPACE/kube/temp-deployment.yaml -f $WORKSPACE/kube/service.yaml  -n phnx
+                    sh """
                 }
             }
         }
