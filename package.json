@@ -6,6 +6,7 @@
   "author": "Phnx",
   "license": "MIT",
   "dependencies": {
+    "@pact-foundation/pact": "^9.15.3",
     "cypress": "^6.4.0",
     "express": "^4.17.1"
   }
