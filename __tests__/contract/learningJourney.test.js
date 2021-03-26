@@ -11,6 +11,17 @@ const provider = new Pact({
 	cors: true
 });
 
+let learningJourneyService;
+
 beforeAll(async () => {
   await provider.setup();
+	console.log('Pact mock server started');
+
+	learningJourneyService = new LearningJourneyService(provider.mockService.baseUrl);
+}, 6000);
+
+describe('GET learning journey message', () => {
+
 });
+
+
