@@ -1,5 +1,7 @@
-import { Pact, Matchers } from '@pact-foundation/pact';
-import { resolve } from 'path';
+const { Pact, Matchers } = require('@pact-foundation/pact');
+const { resolve } = require('path');
+
+const { string } = Matchers;
 
 const provider = new Pact({
 	consumer: 'learning-journey',
@@ -20,8 +22,29 @@ beforeAll(async () => {
 	learningJourneyService = new LearningJourneyService(provider.mockService.baseUrl);
 }, 6000);
 
-describe('GET learning journey message', () => {
+describe('GET learning journey message', async () => {
 
+	beforeEach(async ()=>{
+		await provider.addInteraction({
+			state: 'default state',
+			uponReceiving: 'Hello world message',
+			withRequest: {
+				method: 'GET',
+				path: '/message'
+			},
+			willRespondWith : {
+				status: 200,
+				body: {
+					message: string('Hello world')
+				}
+			}
+		})
+	});
+
+	it('Should return expected response', async ()=>{
+		const response = learningJourneyService.getMessage();
+		expect(response).not.toBeUndefined();
+	});
 });
 
 
