@@ -1,5 +1,6 @@
 const { Pact, Matchers } = require('@pact-foundation/pact');
 const { resolve } = require('path');
+const {LearningJourneyService} = require('../../service/LearningJourneyService');
 
 const { string } = Matchers;
 
@@ -22,6 +23,10 @@ beforeAll(async () => {
 	learningJourneyService = new LearningJourneyService(provider.mockService.baseUrl);
 }, 6000);
 
+afterAll(async () => {
+	await provider.finalize();
+  }, 600000);
+
 describe('GET learning journey message', async () => {
 
 	beforeEach(async ()=>{
@@ -41,10 +46,12 @@ describe('GET learning journey message', async () => {
 		})
 	});
 
+	afterEach(async () => {
+		await provider.verify();
+	  });
+
 	it('Should return expected response', async ()=>{
-		const response = learningJourneyService.getMessage();
+		const response = await learningJourneyService.getMessage();
 		expect(response).not.toBeUndefined();
 	});
 });
-
-

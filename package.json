@@ -5,6 +5,9 @@
   "repository": "git@git.app.gittigidiyor.net:aozfidan/learning-journey.git",
   "author": "Phnx",
   "license": "MIT",
+  "scripts": {
+    "test":"jest --passWithNoTests --testPathIgnorePatterns=cypress"
+  },
   "dependencies": {
     "@pact-foundation/pact": "^9.15.3",
     "axios": "^0.21.1",

@@ -1,0 +1,36 @@
+{
+  "consumer": {
+    "name": "learning-journey"
+  },
+  "provider": {
+    "name": "learning-journey-provider"
+  },
+  "interactions": [
+    {
+      "description": "Hello world message",
+      "providerState": "default state",
+      "request": {
+        "method": "GET",
+        "path": "/message"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "message": "Hello world"
+        },
+        "matchingRules": {
+          "$.body.message": {
+            "match": "type"
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}
