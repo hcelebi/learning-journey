@@ -51,7 +51,7 @@ describe('GET learning journey message', async () => {
 	  });
 
 	it('Should return expected response', async ()=>{
-		const response = await learningJourneyService.getMessage();
-		expect(response).not.toBeUndefined();
+		const message = await learningJourneyService.getMessage();
+		expect(message).toBe('Hello world');
 	});
 });

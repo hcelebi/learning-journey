@@ -6,7 +6,8 @@
   "author": "Phnx",
   "license": "MIT",
   "scripts": {
-    "test":"jest --passWithNoTests --testPathIgnorePatterns=cypress"
+    "test": "jest --passWithNoTests --testPathIgnorePatterns=cypress",
+    "start": "node ./index.js"
   },
   "dependencies": {
     "@pact-foundation/pact": "^9.15.3",
