@@ -3,6 +3,7 @@ WORKDIR /app
 
 COPY index.js .
 COPY package.json .
+COPY service/* .
 
 RUN ls
 RUN pwd
