@@ -14,4 +14,4 @@ RUN ls
 
 EXPOSE 3000
 
-CMD ["nodemon", "index.js"]
+CMD ["yarn", "dev"]
