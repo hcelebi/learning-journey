@@ -40,7 +40,7 @@ describe('GET learning journey message', async () => {
 			willRespondWith : {
 				status: 200,
 				body: {
-					message: string('Hello world')
+					message: string()
 				}
 			}
 		})
