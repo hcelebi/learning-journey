@@ -27,7 +27,7 @@ afterAll(async () => {
 	await provider.finalize();
   }, 600000);
 
-describe('GET learning journey message', async () => {
+describe('GET learning journey message', () => {
 
 	beforeEach(async ()=>{
 		await provider.addInteraction({
