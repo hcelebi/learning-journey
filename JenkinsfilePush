@@ -60,7 +60,7 @@ pipeline {
         stage('Publish Pact Contract') {
             steps {
                 script {
-                    sh "docker run -v $WORKSPACE:/usr/src/app" +
+                    sh "docker run -v $WORKSPACE:/usr/src/app " +
                             "-e PACT_BROKER_BASE_URL='http://10.35.101.51:30266' " +
                             "-u 1000:1000 " +
                             "harbor-test.app.gittigidiyor.net/gg/pact-cli:latest broker publish /usr/src/app/.pact/pacts --consumer-app-version=${env.BUILD_NUMBER}"
