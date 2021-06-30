@@ -51,7 +51,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    String COMMAND = "yarn test"
+                    String COMMAND = "yarn install test"
                     sh "docker run -v $WORKSPACE:/usr/src/app -v /home/jenkins/yarn:/usr/cache -u 1000:1000 $yarnDevImage bash -c '${COMMAND}'"
                 }
             }
