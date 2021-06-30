@@ -8,7 +8,7 @@ def DOCKER_IMAGE_NAME = "learning-journey"
 
 String SHORT_BRANCH_NAME
 String DOCKER_IMAGE_VERSION
-String yarnDevImage = "harbor-test.app.gittigidiyor.net/gg/gg-base-node:${nodeVersion}-dev"
+String yarnDevImage = "harbor-test.app.gittigidiyor.net/gg/gg-base-node:14.15.4-dev"
 
 pipeline {
     agent {
@@ -49,11 +49,10 @@ pipeline {
 
     stages {
         stage('Test') {
-            when { expression { return !disabledStages.contains("${STAGE_NAME}") } }
             steps {
                 script {
                     String COMMAND = "yarn test"
-                    sh "docker run ${getDockerParams()} $yarnDevImage bash -c '${COMMAND}'"
+                    sh "docker run -v $WORKSPACE:/usr/src/app -v /home/jenkins/yarn:/usr/cache -u 1000:1000 $yarnDevImage bash -c '${COMMAND}'"
                 }
             }
         }
@@ -61,14 +60,10 @@ pipeline {
         stage('Publish Pact Contract') {
             steps {
                 script {
-                    String GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
-                    String COMMAND = "broker publish /usr/src/app/.pact/pacts" +
-                            " --consumer-app-version=${GIT_COMMIT_HASH}" +
-                            " --tag $SHORT_BRANCH_NAME"
-                    sh "docker run  " +
-                            "-e PACT_BROKER_BASE_URL='http://$PACT_BROKER_URL' " +
+                    sh "docker run -v $WORKSPACE:/usr/src/app" +
+                            "-e PACT_BROKER_BASE_URL='http://10.35.101.51:30266' " +
                             "-u 1000:1000 " +
-                            "harbor-test.app.gittigidiyor.net/gg/pact-cli:latest ${COMMAND}"
+                            "harbor-test.app.gittigidiyor.net/gg/pact-cli:latest broker publish /usr/src/app/.pact/pacts --consumer-app-version=${env.BUILD_NUMBER}"
                 }
             }
         }
@@ -80,8 +75,6 @@ pipeline {
                 }
             }
         }
-
-
 
         stage("Docker Push") {
             parallel {
