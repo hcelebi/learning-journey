@@ -6,7 +6,8 @@ def (GROUP, REPOSITORY) = JOB_NAME.toLowerCase().split("/")
 
 def DOCKER_IMAGE_NAME = "learning-journey"
 
-String SHORT_BRANCH_NAME
+String SHORT_BRANCH_NAME = "${env.BRANCH_NAME}".replaceAll('origin/', '').replaceAll('/', '-').trim()
+
 String DOCKER_IMAGE_VERSION
 String yarnDevImage = "harbor-test.app.gittigidiyor.net/gg/gg-base-node:14.15.4-dev"
 
@@ -63,7 +64,9 @@ pipeline {
                     sh "docker run -v $WORKSPACE:/usr/src/app " +
                             "-e PACT_BROKER_BASE_URL='http://10.35.101.51:30266' " +
                             "-u 1000:1000 " +
-                            "harbor-test.app.gittigidiyor.net/gg/pact-cli:latest broker publish /usr/src/app/.pact/pacts --consumer-app-version=${env.BUILD_NUMBER}"
+                            "harbor-test.app.gittigidiyor.net/gg/pact-cli:latest broker publish " +
+                                "/usr/src/app/.pact/pacts --consumer-app-version=${env.BUILD_NUMBER} " +
+                                "--tag ${SHORT_BRANCH_NAME}"
                 }
             }
         }
