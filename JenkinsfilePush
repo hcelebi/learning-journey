@@ -71,18 +71,6 @@ pipeline {
             }
         }
 
-        stage('Can I Deploy') {
-            steps {
-                script {
-                    String COMMAND = "broker can-i-deploy --pacticipant learning-journey --latest"
-                    sh "docker run -v $WORKSPACE:/usr/src/app " +
-                            "-e PACT_BROKER_BASE_URL='http://10.35.101.51:30266' " +
-                            "-u 1000:1000 " +
-                            "harbor-test.app.gittigidiyor.net/gg/pact-cli:latest ${COMMAND}"
-                }
-            }
-        }
-
         stage("Docker Build") {
             steps {
                 script {
@@ -108,9 +96,23 @@ pipeline {
             }
         }
 
+        stage('Can I Deploy') {
+            when { expression { return SHORT_BRANCH_NAME == 'master' } }
+            steps {
+                script {
+                    String COMMAND = "broker can-i-deploy --pacticipant learning-journey --latest"
+                    sh "docker run -v $WORKSPACE:/usr/src/app " +
+                            "-e PACT_BROKER_BASE_URL='http://10.35.101.51:30266' " +
+                            "-u 1000:1000 " +
+                            "harbor-test.app.gittigidiyor.net/gg/pact-cli:latest ${COMMAND}"
+                }
+            }
+        }
+
 
 
         stage("Deploy To Test Cluster With Agent") {
+            when { expression { return SHORT_BRANCH_NAME == 'master' } }
             agent {
                 kubernetes {
                     cloud 'kubernetes-dev'
