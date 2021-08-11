@@ -35,7 +35,7 @@ describe('GET learning journey message', () => {
 			uponReceiving: 'Hello world message',
 			withRequest: {
 				method: 'GET',
-				path: '/message'
+				path: '/messages'
 			},
 			willRespondWith : {
 				status: 200,

@@ -11,7 +11,7 @@
       "providerState": "default state",
       "request": {
         "method": "GET",
-        "path": "/message"
+        "path": "/messages"
       },
       "response": {
         "status": 200,

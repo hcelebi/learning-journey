@@ -5,7 +5,7 @@ class LearningJourneyService {
         this.baseURL = baseURL;
     }
     async getMessage() {
-        return axios.get(this.baseURL + '/message')
+        return axios.get(this.baseURL + '/messages')
         .then(response => {
             return response.data.message;
         })
