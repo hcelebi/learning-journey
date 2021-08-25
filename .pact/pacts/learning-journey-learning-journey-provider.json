@@ -18,10 +18,18 @@
         "headers": {
         },
         "body": {
-          "message": "Hello world"
+          "message": "Hello world",
+          "name": "phnx",
+          "surname": "celebi"
         },
         "matchingRules": {
           "$.body.message": {
+            "match": "type"
+          },
+          "$.body.name": {
+            "match": "type"
+          },
+          "$.body.surname": {
             "match": "type"
           }
         }

@@ -41,7 +41,8 @@ describe('GET learning journey message', () => {
 				status: 200,
 				body: {
 					message: string('Hello world'),
-					name: string('phnx')
+					name: string('phnx'),
+					surname: string('celebi')
 				}
 			}
 		})
