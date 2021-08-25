@@ -65,7 +65,7 @@ pipeline {
                             "-e PACT_BROKER_BASE_URL='http://10.35.101.51:30266' " +
                             "-u 1000:1000 " +
                             "harbor-test.app.gittigidiyor.net/gg/pact-cli:latest broker publish " +
-                                "/usr/src/app/.pact/pacts --consumer-app-version=${env.BUILD_NUMBER} " +
+                                "/usr/src/app/.pact/pacts --consumer-app-version=${env.BUILD_NUMBER}.${SHORT_BRANCH_NAME} " +
                                 "--tag ${SHORT_BRANCH_NAME}"
                 }
             }
