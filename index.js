@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 3000;
-const {LearningJourneyService} = require('./service/LearningJourneyService')
+const { LearningJourneyService } = require('./service/LearningJourneyService')
 
 app.get('/learning-journey', async (req, res) => {
     const learningJourneyService = new LearningJourneyService('http://learning-journey-provider:8080/');

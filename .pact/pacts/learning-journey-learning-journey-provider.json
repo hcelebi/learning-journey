@@ -8,28 +8,20 @@
   "interactions": [
     {
       "description": "Hello world message",
-      "providerState": "default state",
+      "providerState": "consumer requests a message from provider",
       "request": {
         "method": "GET",
-        "path": "/messages"
+        "path": "/message"
       },
       "response": {
         "status": 200,
         "headers": {
         },
         "body": {
-          "message": "Hello world",
-          "name": "phnx",
-          "surname": "celebi"
+          "message": "Hello world"
         },
         "matchingRules": {
           "$.body.message": {
-            "match": "type"
-          },
-          "$.body.name": {
-            "match": "type"
-          },
-          "$.body.surname": {
             "match": "type"
           }
         }

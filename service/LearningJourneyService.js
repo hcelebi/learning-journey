@@ -5,9 +5,9 @@ class LearningJourneyService {
         this.baseURL = baseURL;
     }
     async getMessage() {
-        return axios.get(this.baseURL + '/messages')
+        return axios.get(this.baseURL + '/message')
         .then(response => {
-            return `${response.data.message} - ${response.data.name} ${response.data.surname}`;
+            return `${response.data.message}`;
         })
         .catch(error => console.log("Error in getMessage", error));
     }

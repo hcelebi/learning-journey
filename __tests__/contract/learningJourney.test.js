@@ -1,59 +1,88 @@
-const { Pact, Matchers } = require('@pact-foundation/pact');
-const { resolve } = require('path');
-const {LearningJourneyService} = require('../../service/LearningJourneyService');
+const {Pact, Matchers} = require('@pact-foundation/pact');
+const {resolve} = require('path');
+const {LearningJourneyService} = require(
+    '../../service/LearningJourneyService');
 
-const { string } = Matchers;
+const {string} = Matchers;
 
+/**
+ *
+ * Pact provider object for all interactions with pact mock server
+ *
+ * @type {Pact}
+ */
 const provider = new Pact({
-	consumer: 'learning-journey',
-	provider: 'learning-journey-provider',
-	log: resolve(process.cwd(), '.pact', 'logs', 'pact.log'),
-	dir: resolve(process.cwd(), '.pact', 'pacts'),
-	pactfileWriteMode: 'overwrite',
-	logLevel: 'error',
-	cors: true
+  consumer: 'learning-journey',
+  provider: 'learning-journey-provider',
+  log: resolve(process.cwd(), '.pact', 'logs', 'pact.log'),
+  dir: resolve(process.cwd(), '.pact', 'pacts'),
+  pactfileWriteMode: 'overwrite',
+  logLevel: 'error',
+  cors: true
 });
 
 let learningJourneyService;
 
+/**
+ * Before all tests cases init test env.
+ */
 beforeAll(async () => {
-  await provider.setup();
-	console.log('Pact mock server started');
 
-	learningJourneyService = new LearningJourneyService(provider.mockService.baseUrl);
+  /**
+   * Start pact mock server instance
+   */
+  await provider.setup();
+
+  console.log('Pact mock server started');
+
+  /**
+   * Init rest client
+   * @type {LearningJourneyService}
+   */
+  learningJourneyService = new LearningJourneyService(
+      provider.mockService.baseUrl);
+
 }, 6000);
 
+/**
+ * After all tests run, clean and shutdown test env
+ */
 afterAll(async () => {
-	await provider.finalize();
-  }, 600000);
 
-describe('GET learning journey message', () => {
+  /**
+   * After all tests run, finalize and shutdown pact mock server instance
+   * and check if all tests are passed!
+   */
+  await provider.finalize();
 
-	beforeEach(async ()=>{
-		await provider.addInteraction({
-			state: 'default state',
-			uponReceiving: 'Hello world message',
-			withRequest: {
-				method: 'GET',
-				path: '/messages'
-			},
-			willRespondWith : {
-				status: 200,
-				body: {
-					message: string('Hello world'),
-					name: string('phnx'),
-					surname: string('celebi')
-				}
-			}
-		})
-	});
+}, 600000);
 
-	afterEach(async () => {
-		await provider.verify();
-	  });
+describe('[GET] hello world message', () => {
 
-	it('Should return expected response', async ()=>{
-		const message = await learningJourneyService.getMessage();
-		expect(message).not.toBeUndefined();
-	});
+  beforeEach(async () => {
+
+    await provider.addInteraction({
+      state: 'consumer requests a message from provider',
+      uponReceiving: 'Hello world message',
+      withRequest: {
+        method: 'GET',
+        path: '/message'
+      },
+      willRespondWith: {
+        status: 200,
+        body: {
+          message: string('Hello world')
+        }
+      }
+    })
+  });
+
+  afterEach(async () => {
+    await provider.verify();
+  });
+
+  it('Should return expected response', async () => {
+    const message = await learningJourneyService.getMessage();
+    expect(message).not.toBeUndefined();
+  });
 });
