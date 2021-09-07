@@ -12,8 +12,8 @@ const {string} = Matchers;
  * @type {Pact}
  */
 const provider = new Pact({
-  consumer: 'learning-journey',
-  provider: 'learning-journey-provider',
+  consumer: 'lj-consumer',
+  provider: 'lj-provider',
   log: resolve(process.cwd(), '.pact', 'logs', 'pact.log'),
   dir: resolve(process.cwd(), '.pact', 'pacts'),
   pactfileWriteMode: 'overwrite',
