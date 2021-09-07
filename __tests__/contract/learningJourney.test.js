@@ -77,12 +77,15 @@ describe('[GET] hello world message', () => {
     })
   });
 
-  afterEach(async () => {
-    await provider.verify();
-  });
-
   it('Should return expected response', async () => {
     const message = await learningJourneyService.getMessage();
+
     expect(message).not.toBeUndefined();
+    expect(message.status).toBe('ok');
+    expect(message.messageText).toBe('Hello world');
+  });
+
+  afterEach(async () => {
+    await provider.verify();
   });
 });
