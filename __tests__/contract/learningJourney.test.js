@@ -21,6 +21,9 @@ const provider = new Pact({
   cors: true
 });
 
+/**
+ * learning journey rest client service
+ */
 let learningJourneyService;
 
 /**
