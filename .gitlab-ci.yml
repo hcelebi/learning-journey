@@ -1,0 +1,55 @@
+variables:
+  KUBECONFIG: /etc/deploy/config
+
+stages:          # List- of stages for jobs, and their order of execution
+  - test
+  - publish
+  - build
+  - deploy
+
+test-job:
+  stage: test
+  image: node:latest
+  cache:
+    paths:
+      - node_modules/
+      - .yarn
+  before_script:
+    - apt-get update -qq && apt-get install -qy libelf1
+  script:
+    - yarn install && yarn test
+
+publish-job:
+  stage: publish
+  image: pactfoundation/pact-cli:latest
+  script:
+    - "pact-broker publish pacts
+      --consumer-app-version=$CI_COMMIT_SHORT_SHA
+      --tag=$CI_COMMIT_BRANCH
+      --broker-base-url=https://hakobe.pactflow.io
+      --broker-token=bZCMbZnsXOhPJ0x4H6wVUg
+    "
+
+build-job:       # This    runs in the  stage, which runs first.
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker login -u hakobe32 -p Celebi_32
+    - echo "Compiling the code..."
+    - docker build --pull -t hakobe32/learning-journey:$CI_PIPELINE_IID .
+    - echo "Compile complete."
+    - echo "Docker image pushing"
+    - docker push hakobe32/learning-journey:$CI_PIPELINE_IID
+    - echo "Docker image pushed"
+
+deploy-job:
+  stage: deploy
+  image: dtzar/helm-kubectl
+  script:
+    - mkdir /etc/deploy
+    - mv kube/.config /etc/deploy/config
+    - sed "s/%%IMAGE_VERSION%%/$CI_PIPELINE_IID/g" kube/deployment.yaml > kube/temp-deployment.yaml
+    - kubectl config --kubeconfig=/etc/deploy/config use-context do-lon1-k8s-1-21-3-do-0-lon1-1631387962625
+    - kubectl apply -f kube/temp-deployment.yaml -f kube/service.yaml
