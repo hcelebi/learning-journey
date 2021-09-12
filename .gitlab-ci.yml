@@ -49,7 +49,7 @@ deploy-job:
   image: dtzar/helm-kubectl
   script:
     - mkdir /etc/deploy
-    - mv kube/.config /etc/deploy/config
+    - mv kube/config /etc/deploy/config
     - sed "s/%%IMAGE_VERSION%%/$CI_PIPELINE_IID/g" kube/deployment.yaml > kube/temp-deployment.yaml
     - kubectl config --kubeconfig=/etc/deploy/config use-context do-lon1-k8s-1-21-3-do-0-lon1-1631387962625
     - kubectl apply -f kube/temp-deployment.yaml -f kube/service.yaml
